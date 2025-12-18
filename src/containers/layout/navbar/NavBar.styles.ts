@@ -10,15 +10,16 @@ const navItem = {
 
 export const styles = {
   header: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    display: 'grid',
+    gridTemplateColumns: { xs: 'auto auto', md: '1fr auto 1fr' },
     p: 0,
     margin: { xs: 0, xl: 'auto' },
     maxWidth: '1800px',
     width: { xl: '100%' }
   },
   logoButton: {
-    m: { xs: '10px', sm: '18px', md: '22px 6px 22px 24px', lg: '22px 24px' }
+    m: { xs: '10px', sm: '18px', md: '22px 6px 22px 24px', lg: '22px 24px' },
+    justifySelf: 'start'
   },
   navList: {
     display: { xs: 'none', md: 'flex' },
