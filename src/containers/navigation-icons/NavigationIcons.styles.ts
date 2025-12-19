@@ -7,7 +7,8 @@ export const styles = {
     alignItems: 'center',
     '&>.MuiIconButton-root': {
       p: { sm: '12px', md: '7px', lg: '12px' }
-    }
+    },
+    justifySelf: 'end'
   },
   showOnlyOnMobile: { display: { md: 'none' }, color: 'primary.900' },
   loginButton: {
