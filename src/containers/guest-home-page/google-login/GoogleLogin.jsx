@@ -21,7 +21,12 @@ const GoogleLogin = ({ type, buttonWidth, role }) => {
   }
 
   const openRegistrationDialog = () => {
-    openModal({ component: <SignUpDialog role={UserRoleEnum.Tutor} /> })
+    closeModal()
+    setTimeout(
+      () =>
+        openModal({ component: <SignUpDialog role={UserRoleEnum.Tutor} /> }),
+      0
+    )
   }
 
   return (
