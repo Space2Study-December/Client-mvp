@@ -16,5 +16,8 @@ export const styles = {
       color: 'primary.900',
       my: '14px'
     }
+  },
+  loaderContainer: {
+    padding: '100px'
   }
 }

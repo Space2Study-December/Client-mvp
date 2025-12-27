@@ -1,16 +1,16 @@
-import { FC, ReactElement } from 'react'
 import { Box } from '@mui/material'
+import { FC, ReactElement } from 'react'
+import AppButton from '~/components/app-button/AppButton'
 
 import ImgTitleDescription from '~/components/img-title-description/ImgTitleDescription'
-import AppButton from '~/components/app-button/AppButton'
 import { styles } from '~/containers/guest-home-page/notification-modal/NotificationModal.styles'
 
 interface ConfirmEmailModal {
-  description: string | ReactElement
-  buttonTitle: string
   title: string
   img: string
-  onClose: () => void
+  description?: string | ReactElement
+  buttonTitle?: string
+  onClose?: () => void
 }
 
 const NotificationModal: FC<ConfirmEmailModal> = ({
@@ -28,7 +28,7 @@ const NotificationModal: FC<ConfirmEmailModal> = ({
         style={styles.imgTitleDesc}
         title={title}
       />
-      <AppButton onClick={onClose}>{buttonTitle}</AppButton>
+      {buttonTitle && <AppButton onClick={onClose}>{buttonTitle}</AppButton>}
     </Box>
   )
 }
