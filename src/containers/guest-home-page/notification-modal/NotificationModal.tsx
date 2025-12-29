@@ -8,7 +8,7 @@ import { styles } from '~/containers/guest-home-page/notification-modal/Notifica
 interface ConfirmEmailModal {
   title: string
   img: string
-  description?: string | ReactNode
+  description?: ReactNode
   buttonTitle?: string
   onClose?: () => void
 }

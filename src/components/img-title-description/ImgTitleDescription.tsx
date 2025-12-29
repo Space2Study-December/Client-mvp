@@ -8,7 +8,7 @@ import TitleWithDescription from '~/components/title-with-description/TitleWithD
 interface ImgTitleDescriptionProps {
   img?: string
   title: string
-  description?: string | ReactNode
+  description?: ReactNode
   style?: {
     [key: string]: SxProps
   }
