@@ -1,15 +1,16 @@
-import { useTranslation } from 'react-i18next'
-
 import Box from '@mui/material/Box'
-import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
-import InfoCard from '~/components/info-card/InfoCard'
-
-import { guestRoutes } from '~/router/constants/guestRoutes'
+import { useTranslation } from 'react-i18next'
 import learnImg from '~/assets/img/guest-home-page/learnImg.png'
 import teachImg from '~/assets/img/guest-home-page/teachImg.png'
+import InfoCard from '~/components/info-card/InfoCard'
+import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
+import { SignUpDialog } from '~/containers/guest-home-page/sign-up-dialog/SignUpDialog'
+import { styles } from '~/containers/guest-home-page/styles/WhatCanYouDo.styles'
+import { useModalContext } from '~/context/modal-context'
+
+import { guestRoutes } from '~/router/constants/guestRoutes'
 
 import { UserRoleEnum } from '~/types'
-import { styles } from '~/containers/guest-home-page/styles/WhatCanYouDo.styles'
 
 const cardData = [
   {
@@ -30,10 +31,15 @@ const cardData = [
 
 const WhatCanYouDo = () => {
   const { t } = useTranslation()
+  const { openModal } = useModalContext()
+
+  const openRegistrationDialog = (role: UserRoleEnum) => {
+    openModal({ component: <SignUpDialog role={role} /> })
+  }
 
   const cards = cardData.map((item) => (
     <InfoCard
-      action={() => {}}
+      action={() => openRegistrationDialog(item.actionType)}
       actionLabel={t(item.actionLabel)}
       cardWidth={460}
       description={t(item.description)}

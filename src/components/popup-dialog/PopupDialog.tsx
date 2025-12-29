@@ -1,25 +1,27 @@
-import { FC } from 'react'
+import CloseIcon from '@mui/icons-material/Close'
+import { PaperProps } from '@mui/material'
 import Box from '@mui/material/Box'
 import Dialog from '@mui/material/Dialog'
 import IconButton from '@mui/material/IconButton'
-import CloseIcon from '@mui/icons-material/Close'
-import { PaperProps } from '@mui/material'
+import { FC } from 'react'
+import { styles } from '~/components/popup-dialog/PopupDialog.styles'
 
 import useBreakpoints from '~/hooks/use-breakpoints'
-import { styles } from '~/components/popup-dialog/PopupDialog.styles'
 
 interface PopupDialogProps {
   content: React.ReactNode
   paperProps: PaperProps
   timerId: NodeJS.Timeout | null
   closeModalAfterDelay: (delay?: number) => void
+  closeModal: () => void
 }
 
 const PopupDialog: FC<PopupDialogProps> = ({
   content,
   paperProps,
   timerId,
-  closeModalAfterDelay
+  closeModalAfterDelay,
+  closeModal
 }) => {
   const { isMobile } = useBreakpoints()
 
@@ -41,7 +43,7 @@ const PopupDialog: FC<PopupDialogProps> = ({
         onMouseOver={handleMouseOver}
         sx={styles.box}
       >
-        <IconButton sx={styles.icon}>
+        <IconButton onClick={closeModal} sx={styles.icon}>
           <CloseIcon />
         </IconButton>
         <Box sx={styles.contentWraper}>{content}</Box>
