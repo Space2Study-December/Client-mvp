@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import { FC, ReactElement } from 'react'
+import { FC, ReactNode } from 'react'
 import AppButton from '~/components/app-button/AppButton'
 
 import ImgTitleDescription from '~/components/img-title-description/ImgTitleDescription'
@@ -8,7 +8,7 @@ import { styles } from '~/containers/guest-home-page/notification-modal/Notifica
 interface ConfirmEmailModal {
   title: string
   img: string
-  description?: string | ReactElement
+  description?: string | ReactNode
   buttonTitle?: string
   onClose?: () => void
 }
