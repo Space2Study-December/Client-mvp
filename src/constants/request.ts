@@ -25,6 +25,10 @@ export const URLs = {
   },
   subjects: {
     get: '/subjects',
+
+    // TODO: should be replaced with the correct endpoint
+    getSubjectsByCategory: '/subjects',
+
     getNames: '/subjects/names'
   },
   resources: {
