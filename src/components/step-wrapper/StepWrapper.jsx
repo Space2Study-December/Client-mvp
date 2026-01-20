@@ -12,10 +12,16 @@ import useSteps from '~/hooks/use-steps'
 import { styles } from '~/components/step-wrapper/StepWrapper.styles'
 
 const StepWrapper = ({ children, steps }) => {
-  const { activeStep, stepErrors, isLastStep, loading, stepOperation } =
-    useSteps({
-      steps
-    })
+  const {
+    activeStep,
+    stepErrors,
+    stepData,
+    isLastStep,
+    loading,
+    stepOperation
+  } = useSteps({
+    steps
+  })
   const { next, back, setActiveStep, handleSubmit } = stepOperation
   const { t } = useTranslation()
 
@@ -70,7 +76,9 @@ const StepWrapper = ({ children, steps }) => {
       <Box sx={styles.stepContent}>
         {cloneElement(children[activeStep], {
           btnsBox,
-          stepLabel: steps[activeStep]
+          stepLabel: steps[activeStep],
+          stepData: stepData[steps[activeStep]],
+          onStepDataChange: stepOperation.handleStepDataChange
         })}
       </Box>
     </Container>

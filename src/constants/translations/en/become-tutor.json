@@ -12,12 +12,11 @@
     "title": "Velit officia consequat duis enim velit mollit. Other categories you can add in your account settings later.",
     "autocompleteLabel": "Your native language"
   },
-  "categories": {
-    "title": "Velit officia consequat duis enim velit mollit. Other categories you can add in your account settings later.",
-    "mainSubjectsLabel": "Main Tutoring Category",
+  "subjects": {
+    "title": "Other subjects you can add in your account settings later.",
+    "categoryLabel": "Main Tutoring Category",
     "subjectLabel": "Subject",
     "btnText": "Add one more subject",
-    "emptyFields": "All fields must be filled",
     "sameSubject": "You have the same subject"
   },
   "photo": {
