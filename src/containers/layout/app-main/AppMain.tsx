@@ -11,6 +11,7 @@ import Loader from '~/components/loader/Loader'
 import { checkAuth } from '~/redux/reducer'
 
 import { styles } from '~/containers/app-content/AppContent.styles'
+import PageWrapper from '~/components/page-wrapper/PageWrapper'
 
 const AppMain = () => {
   const mainWithFooter = useRef(null)
@@ -34,10 +35,12 @@ const AppMain = () => {
   return (
     <Box ref={mainWithFooter} sx={styles.content}>
       <Suspense fallback={<Loader pageLoad />}>
-        <AppBreadCrumbs />
-        <ScrollToTop element={mainWithFooter} />
-        <Outlet context={{ pageRef: mainWithFooter }} />
-        <ScrollToTopButton element={mainWithFooter} />
+        <PageWrapper>
+          <AppBreadCrumbs />
+          <ScrollToTop element={mainWithFooter} />
+          <Outlet context={{ pageRef: mainWithFooter }} />
+          <ScrollToTopButton element={mainWithFooter} />
+        </PageWrapper>
         <Footer />
       </Suspense>
     </Box>

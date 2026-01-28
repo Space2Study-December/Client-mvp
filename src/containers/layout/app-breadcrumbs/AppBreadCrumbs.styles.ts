@@ -9,7 +9,10 @@ const link = {
 
 export const styles = {
   root: {
-    py: 4
+    // py: 4
+    px: { xs: 3, sm: 0 },
+    py: { xs: 2, sm: 4 },
+    padding: '30px 0 34px'
   },
   separator: {
     width: '4px',

@@ -17,5 +17,8 @@ export const styles = {
       marginBottom: '-4px'
     },
     ...layout
+  },
+  mainConatiner: {
+    width: '600px'
   }
 }

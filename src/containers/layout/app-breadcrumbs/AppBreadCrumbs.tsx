@@ -1,5 +1,5 @@
 import { Link, useMatches } from 'react-router-dom'
-import { Breadcrumbs, Typography, Container } from '@mui/material'
+import { Breadcrumbs, Typography } from '@mui/material'
 
 import { Matches } from '~/types'
 import { styles } from '~/containers/layout/app-breadcrumbs/AppBreadCrumbs.styles'
@@ -35,11 +35,11 @@ const AppBreadCrumbs = () => {
   const separator = <Typography sx={styles.separator} />
 
   return crumbs.length > 1 ? (
-    <Container maxWidth='xl' sx={styles.root}>
+    <div style={styles.root}>
       <Breadcrumbs separator={separator} sx={styles.breadCrumbs}>
         {breadCrumbs}
       </Breadcrumbs>
-    </Container>
+    </div>
   ) : null
 }
 

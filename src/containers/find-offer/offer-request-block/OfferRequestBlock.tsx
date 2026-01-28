@@ -17,7 +17,11 @@ const OfferRequestBlock = () => {
   }
 
   return (
-    <TitleBlock img={icon} translationKey={translationKey}>
+    <TitleBlock
+      img={icon}
+      style={{ mb: '30px' }}
+      translationKey={translationKey}
+    >
       <AppButton
         fullWidth={isMobile}
         onClick={handleOpenDrawer}

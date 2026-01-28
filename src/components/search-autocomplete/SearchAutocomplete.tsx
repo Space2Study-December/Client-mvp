@@ -35,7 +35,7 @@ interface SearchAutocompleteProps
   extends Omit<AutocompleteProps<string, false, true, true>, 'renderInput'> {
   search: string
   setSearch: Dispatch<SetStateAction<string>>
-  onSearchChange?: () => void
+  onSearchChange?: Dispatch<SetStateAction<string>>
   textFieldProps: TextFieldProps
   renderInput?: (params: AutocompleteRenderInputParams) => ReactNode
 }
