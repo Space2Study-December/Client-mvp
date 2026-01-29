@@ -5,11 +5,13 @@ import { useCallback } from 'react'
 import { useModalContext } from '~/context/modal-context'
 import { useTranslation } from 'react-i18next'
 import imgReject from '~/assets/img/email-confirmation-modals/not-success-icon.svg'
+import imgSuccess from '~/assets/img/email-confirmation-modals/success-icon.svg'
 import LoginDialog from '~/containers/guest-home-page/login-dialog/LoginDialog'
 import useAxios from '~/hooks/use-axios'
 import { AuthService } from '~/services/auth-service'
 import Loader from '~/components/loader/Loader'
 import ImgTitleDescription from '~/components/img-title-description/ImgTitleDescription'
+import NotificationModal from '~/containers/guest-home-page/notification-modal/NotificationModal'
 
 const EmailConfirmModal = ({ confirmToken, openModal }) => {
   const { t } = useTranslation()
@@ -30,7 +32,11 @@ const EmailConfirmModal = ({ confirmToken, openModal }) => {
   }
 
   if (loading) {
-    return <Loader size={100} />
+    return (
+      <Box sx={styles.loaderContainer}>
+        <Loader pageLoad size={100} />
+      </Box>
+    )
   }
 
   if (
@@ -69,6 +75,17 @@ const EmailConfirmModal = ({ confirmToken, openModal }) => {
           {t('common.confirmButton')}
         </Button>
       </Box>
+    )
+  }
+
+  if (!loading && !error) {
+    return (
+      <NotificationModal
+        buttonTitle={t('button.goToLogin')}
+        img={imgSuccess}
+        onClose={openLoginDialog}
+        title={t('modals.emailConfirm')}
+      />
     )
   }
 }

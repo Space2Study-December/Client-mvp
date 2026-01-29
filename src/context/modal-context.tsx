@@ -1,13 +1,13 @@
+import { PaperProps } from '@mui/material/Paper'
 import {
-  FC,
   createContext,
+  FC,
   useCallback,
   useContext,
   useMemo,
   useState
 } from 'react'
 import PopupDialog from '~/components/popup-dialog/PopupDialog'
-import { PaperProps } from '@mui/material/Paper'
 
 interface Component {
   component: React.ReactElement
@@ -66,6 +66,7 @@ const ModalProvider: FC<ModalProviderProps> = ({ children }) => {
       {children}
       {modal && (
         <PopupDialog
+          closeModal={closeModal}
           closeModalAfterDelay={closeModalAfterDelay}
           content={modal}
           paperProps={paperProps}

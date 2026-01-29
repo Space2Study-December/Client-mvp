@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { getEmptyValues } from '~/utils/helper-functions'
 import { isEqual } from '~/utils/isEqual'
 
-interface UseFormProps<T> {
+export interface UseFormProps<T> {
   initialValues: T
   initialErrors?: { [K in keyof T]: string }
   validations?: Partial<{
@@ -12,7 +12,7 @@ interface UseFormProps<T> {
   submitWithData?: boolean
 }
 
-interface UseFormOutput<T> {
+export interface UseFormOutput<T> {
   data: T
   isDirty: boolean
   errors: { [K in keyof T]: string }

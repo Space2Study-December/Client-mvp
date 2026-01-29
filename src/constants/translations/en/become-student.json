@@ -1,0 +1,9 @@
+{
+  "subjects": {
+    "title": "Other subjects you can add in your account settings later.",
+    "categoryLabel": "Study Category",
+    "subjectLabel": "Subject",
+    "btnText": "Add one more subject",
+    "sameSubject": "You have the same subject"
+  }
+}

@@ -1,4 +1,3 @@
-import { axiosClient } from '~/plugins/axiosClient'
 import { AxiosResponse } from 'axios'
 
 import { URLs } from '~/constants/request'
@@ -7,6 +6,7 @@ import {
   ItemsWithCount,
   SubjectNameInterface
 } from '~/types'
+import { axiosClient } from '~/plugins/axiosClient'
 import { createUrlPath } from '~/utils/helper-functions'
 import { categoryThemes } from '~/styles/category-theme/categoryThemes'
 import * as MuiIcons from '@mui/icons-material'

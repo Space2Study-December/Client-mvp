@@ -82,3 +82,9 @@ export const helperTextHandler = (
 ) => {
   return emptyField(value, emptyMessage, validations[marker](value))
 }
+
+export const positive = (value: boolean) => {
+  if (!value) {
+    return 'common.errorMessages.emptyField'
+  }
+}

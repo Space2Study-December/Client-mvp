@@ -1,11 +1,9 @@
 import { AxiosResponse } from 'axios'
+import { URLs } from '~/constants/request'
+import { axiosClient } from '~/plugins/axiosClient'
 
 import { appApi } from '~/redux/apiSlice'
 import { logout, setUser } from '~/redux/reducer'
-import { axiosClient } from '~/plugins/axiosClient'
-
-import { createUrlPath } from '~/utils/helper-functions'
-import { URLs } from '~/constants/request'
 import {
   ApiMethodEnum,
   GoogleAuthParams,
@@ -15,6 +13,8 @@ import {
   SignupResponse
 } from '~/types'
 
+import { createUrlPath } from '~/utils/helper-functions'
+
 const { POST } = ApiMethodEnum
 
 export const AuthService = {
@@ -23,7 +23,7 @@ export const AuthService = {
   },
   confirmEmail: (confirmToken: string): Promise<AxiosResponse> => {
     const confirmUrl = createUrlPath(URLs.auth.confirm, confirmToken)
-    return axiosClient.get(confirmUrl)
+    return axiosClient.patch(confirmUrl)
   },
   forgotPassword: (userEmail: string): Promise<AxiosResponse> => {
     return axiosClient.post(URLs.auth.forgotPassword, userEmail)

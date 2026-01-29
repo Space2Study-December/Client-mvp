@@ -8,7 +8,7 @@ import useForm from '~/hooks/use-form'
 import { useLoginMutation } from '~/services/auth-service'
 import { useModalContext } from '~/context/modal-context'
 import { useSnackBarContext } from '~/context/snackbar-context'
-import { email } from '~/utils/validations/login'
+import { email } from '~/utils/validations/auth'
 import loginImg from '~/assets/img/login-dialog/login.svg'
 import { login, snackbarVariants } from '~/constants'
 
