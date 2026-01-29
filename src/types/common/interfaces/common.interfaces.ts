@@ -32,6 +32,8 @@ export interface CategoryInterface {
 export interface CategoryNameInterface {
   _id: string
   name: string
+  appearance: CategoryAppearance
+  offers: number
 }
 
 export interface SubjectInterface {
@@ -41,6 +43,15 @@ export interface SubjectInterface {
   totalOffers: DataByRole<number>
   createdAt: string
   updatedAt: string
+}
+
+export interface CardListItemInterface {
+  icon: string | null
+  id: string
+  name: string | null
+  offers: number | null
+  theme: { name: string; bg: string; color: string }
+  categoryId?: string
 }
 
 export interface SubjectNameInterface {

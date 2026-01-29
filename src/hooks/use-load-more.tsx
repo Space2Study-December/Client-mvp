@@ -1,4 +1,4 @@
-import { useState, useMemo, useLayoutEffect, useCallback } from 'react'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 
 import useAxios from '~/hooks/use-axios'
 
@@ -10,30 +10,27 @@ interface UseLoadMoreProps<Data, Params> {
   limit: number
   params?: Params
 }
-
 const useLoadMore = <Data, Params>({
   service,
   limit,
   params
 }: UseLoadMoreProps<Data, Params>) => {
-  const [skip, setSkip] = useState<number>(0)
+  const [skip, setSkip] = useState(0)
   const [data, setData] = useState<Data[]>([])
-  const [previousLimit, setPreviousLimit] = useState<number>(limit)
+  const isFetched = useRef(false)
+  const stableParams = useMemo(() => params, [params])
+  const lastRequestSkip = useRef(0)
 
-  let isFetched = false
-
-  const loadMore = useCallback(
-    () => setSkip((prevState) => prevState + limit),
-    [limit]
-  )
-
-  const handleResponse = useCallback((responseData: ItemsWithCount<Data>) => {
-    setData((prevState) => [...prevState, ...responseData.items])
-  }, [])
-
-  const resetData = useCallback(() => {
-    setSkip(0)
-    setData([])
+  const handleResponse = useCallback((response: ItemsWithCount<Data>) => {
+    setData((prev) => {
+      const existingIds = new Set(prev.map((i) => i.id as string))
+      const newItems = response.items.filter(
+        (i) => !existingIds.has(i.id as string)
+      )
+      return lastRequestSkip.current === 0
+        ? response.items
+        : [...prev, ...newItems]
+    })
   }, [])
 
   const { response, loading, fetchData } = useAxios<
@@ -46,30 +43,31 @@ const useLoadMore = <Data, Params>({
     onResponse: handleResponse
   })
 
-  useLayoutEffect(() => {
-    if (previousLimit === limit && !isFetched) {
-      void fetchData({ ...params, limit, skip } as Params)
-    } else {
-      resetData()
-      setPreviousLimit(limit)
-    }
+  const loadMore = useCallback(() => {
+    setSkip((prev) => prev + limit)
+  }, [limit])
 
-    return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      isFetched = true
-    }
-  }, [fetchData, limit, previousLimit, resetData, skip, params])
+  const resetData = useCallback(() => {
+    setSkip(0)
+    setData([])
+    isFetched.current = false
+  }, [])
 
-  const isExpandable = useMemo(
-    () => data.length < response.count && data.length > 0,
-    [data, response]
-  )
+  useEffect(() => {
+    lastRequestSkip.current = skip
+    void fetchData({ ...stableParams, limit, skip } as Params)
+    isFetched.current = true
+  }, [limit, skip, fetchData, stableParams])
+
+  const isExpandable = useMemo(() => {
+    return data.length < response.count
+  }, [data.length, response.count])
 
   return {
     data,
     loading,
-    resetData,
     loadMore,
+    resetData,
     isExpandable
   }
 }

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import React, { SetStateAction, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
@@ -6,126 +6,91 @@ import Box from '@mui/material/Box'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
-import { useAppSelector } from '~/hooks/use-redux'
 import useLoadMore from '~/hooks/use-load-more'
-import useSubjectsNames from '~/hooks/use-subjects-names'
 import { subjectService } from '~/services/subject-service'
-import { categoryService } from '~/services/category-service'
-import { useModalContext } from '~/context/modal-context'
-
-import PageWrapper from '~/components/page-wrapper/PageWrapper'
+import categoryService from '~/services/category-service'
 import SearchAutocomplete from '~/components/search-autocomplete/SearchAutocomplete'
 import TitleWithDescription from '~/components/title-with-description/TitleWithDescription'
 import NotFoundResults from '~/components/not-found-results/NotFoundResults'
 import CardsList from '~/components/cards-list/CardsList'
-import CardWithLink from '~/components/card-with-link/CardWithLink'
 import DirectionLink from '~/components/direction-link/DirectionLink'
-import CreateSubjectModal from '~/containers/find-offer/create-new-subject/CreateNewSubject'
 import AppToolbar from '~/components/app-toolbar/AppToolbar'
 import OfferRequestBlock from '~/containers/find-offer/offer-request-block/OfferRequestBlock'
 import AsyncAutocomplete from '~/components/async-autocomlete/AsyncAutocomplete'
 import useBreakpoints from '~/hooks/use-breakpoints'
-import serviceIcon from '~/assets/img/student-home-page/service_icon.png'
-import { getOpositeRole, getScreenBasedLimit } from '~/utils/helper-functions'
-import { mapArrayByField } from '~/utils/map-array-by-field'
-
-import {
-  CategoryNameInterface,
-  SizeEnum,
-  SubjectInterface,
-  SubjectNameInterface
-} from '~/types'
-import { itemsLoadLimit } from '~/constants'
+import { CategoryInterface, SizeEnum, CardListItemInterface } from '~/types'
 import { authRoutes } from '~/router/constants/authRoutes'
 import { styles } from '~/pages/subjects/Subjects.styles'
+import CardItem from '~/containers/card-item/CardItem'
+// import { itemsLoadLimit } from '~/containers/my-resources/questions-container/QuestionsContainer.constants'
 
 const Subjects = () => {
-  const [match, setMatch] = useState<string>('')
+  const [search, setSearch] = useState('')
   const [categoryName, setCategoryName] = useState<string>('')
-  const [isFetched, setIsFetched] = useState<boolean>(false)
-  const params = useMemo(() => ({ name: match }), [match])
+  const breakpoints = useBreakpoints()
+  // const itemsPerPage = getScreenBasedLimit(breakpoints, itemsLoadLimit)
 
   const { t } = useTranslation()
-  const { userRole } = useAppSelector((state) => state.appMain)
-  const breakpoints = useBreakpoints()
-  const { openModal } = useModalContext()
+  // const { userRole } = useAppSelector((state) => state.appMain)
   const [searchParams, setSearchParams] = useSearchParams()
   const categoryId = searchParams.get('categoryId') ?? ''
 
-  const cardsLimit = getScreenBasedLimit(breakpoints, itemsLoadLimit)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
-  const transform = useCallback(
-    (data: SubjectNameInterface[]): string[] => mapArrayByField(data, 'name'),
-    []
+  const params = useMemo(
+    () => ({
+      search
+    }),
+    [search]
   )
 
-  const {
-    loading: subjectNamesLoading,
-    response: subjectsNamesItems,
-    fetchData
-  } = useSubjectsNames({
-    fetchOnMount: false,
-    category: categoryId,
-    transform
-  })
-
-  const getSubjectNames = () => {
-    !isFetched && void fetchData()
-    setIsFetched(true)
-  }
-
-  const getSubjects = useCallback(
-    (data?: Pick<SubjectInterface, 'name'>) =>
-      subjectService.getSubjects(data, categoryId),
+  const fetchSubjects = useCallback(
+    async (params?: {
+      skip: number
+      limit: number
+      page: number
+      search: string
+      categoryId: string
+    }) => {
+      return await subjectService.getSubjects({
+        limit: params?.limit ?? 10,
+        skip: params?.skip ?? ((params?.page ?? 1) - 1) * (params?.limit ?? 10),
+        search: params?.search ?? '',
+        categoryId
+      })
+    },
     [categoryId]
   )
 
-  const {
-    data: subjects,
-    loading: subjectsLoading,
-    resetData,
-    loadMore,
-    isExpandable
-  } = useLoadMore<SubjectInterface, Pick<SubjectInterface, 'name'>>({
-    service: getSubjects,
-    limit: cardsLimit,
-    params
+  // const oppositeRole = getOpositeRole(userRole)
+
+  const { data, loadMore, resetData, loading, isExpandable } = useLoadMore<
+    CardListItemInterface,
+    { skip?: number; limit?: number; page?: number; search?: string }
+  >({
+    service: fetchSubjects,
+    limit: 3,
+    // limit: itemsPerPage,
+    params: params
   })
-
-  const oppositeRole = getOpositeRole(userRole)
-
-  const cards = useMemo(
-    () =>
-      subjects.map((item: SubjectInterface) => {
-        return (
-          <CardWithLink
-            description={`${item.totalOffers[oppositeRole]} ${t(
-              'categoriesPage.offers'
-            )}`}
-            img={serviceIcon}
-            key={item._id}
-            link={`${authRoutes.categories.path}?categoryId=${categoryId}&subjectId=${item._id}`}
-            title={item.name}
-          />
-        )
-      }),
-    [subjects, categoryId, oppositeRole, t]
-  )
 
   const onCategoryChange = (
     _: React.SyntheticEvent,
-    value: CategoryNameInterface | null
+    value: CategoryInterface | null
   ) => {
-    setIsFetched(false)
+    resetData()
     searchParams.set('categoryId', value?._id ?? '')
     setCategoryName(value?.name ?? '')
     setSearchParams(searchParams)
-    resetData()
+    setSelectedCategory(value?.name || null)
   }
 
-  const onResponseCategory = (response: CategoryNameInterface[]) => {
+  const onResponseCategory = (response: CategoryInterface[]) => {
     const category = response.find((option) => option._id === categoryId)
-    setCategoryName(category?.name ?? '')
+    onCategoryChange(this, category ?? null)
+  }
+  const handleSearch = (v: SetStateAction<string>) => {
+    setSearch(v)
   }
 
   const autoCompleteCategories = (
@@ -133,20 +98,32 @@ const Subjects = () => {
       axiosProps={{ onResponse: onResponseCategory }}
       labelField='name'
       onChange={onCategoryChange}
-      service={categoryService.getCategoriesNames}
+      service={categoryService.getAllCategories}
       sx={styles.categoryInput}
       textFieldProps={{
         label: t('breadCrumbs.categories')
       }}
-      value={categoryId}
-      valueField='_id'
+      value={selectedCategory}
+      valueField='name'
     />
   )
 
-  const handleOpenModal = () => openModal({ component: <CreateSubjectModal /> })
+  const cards = data.map((category: CardListItemInterface, index: number) => (
+    <CardItem
+      icon={category.icon}
+      id={category.id}
+      key={index}
+      name={category.name}
+      offers={category.offers}
+      onCardSelect={function (): void {
+        throw new Error('Function not implemented.')
+      }}
+      theme={category.theme}
+    />
+  ))
 
   return (
-    <PageWrapper>
+    <div>
       <OfferRequestBlock />
 
       <TitleWithDescription
@@ -172,34 +149,35 @@ const Subjects = () => {
       <AppToolbar sx={styles.searchToolbar}>
         {!breakpoints.isMobile && autoCompleteCategories}
         <SearchAutocomplete
-          loading={subjectNamesLoading}
-          onFocus={getSubjectNames}
-          onSearchChange={resetData}
-          options={subjectsNamesItems}
-          search={match}
-          setSearch={setMatch}
+          loading={loading}
+          onSearchChange={setSearch}
+          // options={subjectsNamesItems}
+          options={[]}
+          search={search}
+          // setSearch={setMatch}
+          setSearch={(value: SetStateAction<string>) => handleSearch(value)}
           textFieldProps={{
             label: t('subjectsPage.subjects.searchLabel')
           }}
         />
       </AppToolbar>
       {breakpoints.isMobile && autoCompleteCategories}
-      {!subjects.length && !subjectsLoading ? (
+      {!data.length && !loading ? (
         <NotFoundResults
           buttonText={t('errorMessages.buttonRequest', { name: 'subjects' })}
           description={t('errorMessages.tryAgainText', { name: 'subjects' })}
-          onClick={handleOpenModal}
+          // onClick={handleOpenModal}
         />
       ) : (
         <CardsList
           btnText={t('categoriesPage.viewMore')}
           cards={cards}
           isExpandable={isExpandable}
-          loading={subjectsLoading}
+          loading={loading}
           onClick={loadMore}
         />
       )}
-    </PageWrapper>
+    </div>
   )
 }
 

@@ -1,6 +1,10 @@
 export const authRoutes = {
   categories: { route: 'categories', path: '/categories' },
-  subjects: { route: 'categories/subjects', path: '/categories/subjects' },
+  subjects: { route: 'subjects', path: '/subjects' },
+  subjectsPerCategory: {
+    route: 'subjects?categoryId=id',
+    path: '/subjects?categoryId=id'
+  },
   findOffers: {
     route: 'categories/subjects/find-offers',
     path: '/categories/subjects/find-offers'

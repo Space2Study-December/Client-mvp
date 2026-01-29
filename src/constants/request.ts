@@ -21,15 +21,15 @@ export const URLs = {
   categories: {
     get: '/categories',
     getNames: '/categories/names',
+    getCategories: '/categories/getCategories',
+    getAllCategories: '/categories/getAllCategories',
     priceRange: '/price-range'
   },
   subjects: {
     get: '/subjects',
-
-    // TODO: should be replaced with the correct endpoint
-    getSubjectsByCategory: '/subjects',
-
-    getNames: '/subjects/names'
+    getSubjectsByCategoryId: '/subjects/filterBy',
+    getNames: '/subjects/names',
+    createSubject: '/subjects/createSubject'
   },
   resources: {
     questions: {
